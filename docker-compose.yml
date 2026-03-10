@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: gsb_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: GSB_Gestion_Stock
+      MYSQL_USER: gsb_user
+      MYSQL_PASSWORD: gsb_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./GSB_Gestion_Stock.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - gsb_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: gsb_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - gsb_network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  gsb_network:
+    driver: bridge
+
