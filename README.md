@@ -207,6 +207,26 @@ L'application démarre sur l'écran de connexion. Saisir un **email** et un **mo
 
 Selon le rôle de l'utilisateur, l'interface Admin ou Utilisateur s'ouvre automatiquement.
 
+#### Comptes de démonstration
+
+**Administrateur**
+
+| Email | Mot de passe | Rôle |
+|-------|--------------|------|
+| `ADMIN` | `123` | Administrateur |
+
+**Utilisateurs**
+
+| Email | Mot de passe | Nom |
+|-------|--------------|-----|
+| `hugo@clinic.fr` | `123` | Hugo Dagreat |
+| `walter.white@clinic.fr` | `123` | Walter White |
+| `alice.martin@clinic.fr` | `password` | Alice Martin |
+| `hugo.durand@clinic.fr` | `password` | Hugo Durand |
+| `lea.petit@pharma.fr` | `password` | Léa Petit |
+
+> **Note** : Les mots de passe `password` sont stockés en SHA-256 en base. Les mots de passe `123` sont stockés en clair (comptes de test uniquement).
+
 ### Export PDF
 
 Depuis l'interface Utilisateur, sélectionner une prescription puis cliquer sur **Exporter PDF**. Un fichier PDF est généré contenant :
