@@ -154,7 +154,7 @@ Users (id_users, name, firstname, role, email, password)
 ### Prérequis
 
 - [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (ou SDK pour compiler)
-- [MySQL Server 8.0](https://dev.mysql.com/downloads/mysql/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) — doit être **lancé** avant de démarrer l'application
 - Windows 10 / 11
 
 ### Installation
@@ -162,17 +162,25 @@ Users (id_users, name, firstname, role, email, password)
 1. **Cloner le dépôt**
 
 ```bash
-git clone https://github.com/<votre-repo>/GSB_Gestion_Stock.git
+git clone https://github.com/Shadowmadnesssss/Gsb_2_Gestion_Stock
 cd GSB_Gestion_Stock
 ```
 
-2. **Créer la base de données MySQL**
+2. **Démarrer la base de données avec Docker**
 
-Exécuter le script SQL fourni pour créer la base `GSB_Gestion_Stock` et ses tables.
+> Docker Desktop doit être ouvert et en cours d'exécution.
+
+```bash
+docker-compose up -d
+```
+
+Cette commande lance automatiquement :
+- un conteneur **MySQL 8.0** sur le port `3306`, avec la base `GSB_Gestion_Stock` initialisée via `GSB_Gestion_Stock.sql`
+- un conteneur **phpMyAdmin** accessible sur [http://localhost:8080](http://localhost:8080) (login : `root` / `root`)
 
 3. **Configurer la connexion** (voir section [Configuration](#configuration))
 
-4. **Compiler et lancer**
+4. **Lancer l'application**
 
 ```bash
 cd GSB_Gestion_Stock
@@ -185,17 +193,19 @@ Ou ouvrir la solution `GSB_Gestion_Stock.sln` dans Visual Studio et lancer avec 
 
 ## Configuration
 
-Le fichier `appsettings.json` contient la chaîne de connexion MySQL :
+Le fichier `appsettings.json` contient la chaîne de connexion MySQL. Il doit être placé **à côté de l'exécutable** (dans `DIST/` si tu utilises la version compilée, ou dans `GSB_Gestion_Stock/` pour le développement).
+
+Avec la configuration Docker fournie (`docker-compose.yml`) :
 
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "server=localhost;database=GSB_Gestion_Stock;uid=root;pwd=votre_mot_de_passe;"
+    "DefaultConnection": "server=localhost;database=GSB_Gestion_Stock;uid=root;pwd=root;"
   }
 }
 ```
 
-> **Note** : Ne pas committer ce fichier avec des identifiants réels en production.
+> **Note** : Le fichier `appsettings.json` n'est pas versionné (voir `.gitignore`). Il faut le créer manuellement à partir de l'exemple ci-dessus avant de lancer l'application.
 
 ---
 
@@ -221,9 +231,7 @@ Selon le rôle de l'utilisateur, l'interface Admin ou Utilisateur s'ouvre automa
 |-------|--------------|-----|
 | `hugo@clinic.fr` | `123` | Hugo Dagreat |
 | `walter.white@clinic.fr` | `123` | Walter White |
-| `alice.martin@clinic.fr` | `password` | Alice Martin |
-| `hugo.durand@clinic.fr` | `password` | Hugo Durand |
-| `lea.petit@pharma.fr` | `password` | Léa Petit |
+
 
 > **Note** : Les mots de passe `password` sont stockés en SHA-256 en base. Les mots de passe `123` sont stockés en clair (comptes de test uniquement).
 

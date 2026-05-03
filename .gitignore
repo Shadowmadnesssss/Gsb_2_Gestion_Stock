@@ -4,6 +4,13 @@ GSB_Gestion_Stock/GSB_Gestion_Stock.exe
 GSB_Gestion_Stock/portable/
 *.runtimeconfig.json
 
+# Artefacts de build à la racine (publish accidentel)
+/*.dll
+/*.pdb
+/*.exe
+/*.deps.json
+/runtimes/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
