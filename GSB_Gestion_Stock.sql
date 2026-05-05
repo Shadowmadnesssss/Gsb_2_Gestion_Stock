@@ -161,7 +161,8 @@ CREATE TABLE `Prescription` (
   `id_prescription` int NOT NULL,
   `id_users` int DEFAULT NULL,
   `id_patients` int DEFAULT NULL,
-  `validity` date DEFAULT NULL
+  `validity` date DEFAULT NULL,
+  `date_creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -225,9 +226,9 @@ INSERT INTO `Users` (`id_users`, `firstname`, `role`, `name`, `email`, `password
 (3, 'Léa', 0, 'Petit', 'lea.petit@pharma.fr', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'),
 (4, 'Thomasson', 0, 'Robert', 'thomas.robert@clinic.fr', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'),
 (5, 'Sarah', 0, 'Lemoine', 'sarah.lemoine@clinic.fr', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'),
-(6, 'Admin', 1, 'Admin', 'ADMIN', '123'),
-(7, 'hugo', 0, 'dagreat', 'hugo@clinic.fr', '123'),
-(8, 'walter', 0, 'white', 'walter.white@clinic.fr', '123'),
+(6, 'Admin', 1, 'Admin', 'ADMIN', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
+(7, 'hugo', 0, 'dagreat', 'hugo@clinic.fr', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
+(8, 'walter', 0, 'white', 'walter.white@clinic.fr', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),
 (9, 'briane', 0, 'bonacorsi', 'briane.bonacorsi@gmail.com', '1efc9c1c6d6c0b4cb3caad0adf464e790d3cffd59f93a08b34571c5d8a6aa88e'),
 (10, 'bober', 0, 'kurwa', 'Boberya@clinic.fr', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3');
 

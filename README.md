@@ -59,7 +59,8 @@
 |-------------|---------|------|
 | C# / .NET | 8.0 | Langage & framework principal |
 | Windows Forms | — | Interface graphique |
-| MySQL | 8.0 | Base de données relationnelle |
+| MySQL | 8.0 | Base de données relationnelle (via Docker) |
+| Docker | Desktop | Conteneurisation MySQL + phpMyAdmin |
 | QuestPDF | 2024.3.10 | Génération de PDFs |
 | MySql.Data | — | Connecteur MySQL pour .NET |
 | SHA-256 | — | Hachage des mots de passe |
@@ -153,8 +154,8 @@ Users (id_users, name, firstname, role, email, password)
 
 ### Prérequis
 
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) — **doit être lancé avant toute chose**
 - [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (ou SDK pour compiler)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) — doit être **lancé** avant de démarrer l'application
 - Windows 10 / 11
 
 ### Installation
@@ -162,50 +163,66 @@ Users (id_users, name, firstname, role, email, password)
 1. **Cloner le dépôt**
 
 ```bash
-git clone https://github.com/Shadowmadnesssss/Gsb_2_Gestion_Stock
-cd GSB_Gestion_Stock
+git clone https://github.com/Shadowmadnesssss/Gsb_2_Gestion_Stock.git
+cd Gsb_2_Gestion_Stock
 ```
 
-2. **Démarrer la base de données avec Docker**
-
-> Docker Desktop doit être ouvert et en cours d'exécution.
+2. **Vérifier que Docker Desktop est bien démarré**, puis lancer les conteneurs depuis la racine du projet :
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
-Cette commande lance automatiquement :
-- un conteneur **MySQL 8.0** sur le port `3306`, avec la base `GSB_Gestion_Stock` initialisée via `GSB_Gestion_Stock.sql`
-- un conteneur **phpMyAdmin** accessible sur [http://localhost:8080](http://localhost:8080) (login : `root` / `root`)
+Cela démarre automatiquement :
+- Un serveur **MySQL 8.0** sur le port `3306`, avec la base `GSB_Gestion_Stock` créée et le fichier `GSB_Gestion_Stock.sql` importé au premier démarrage
+- **phpMyAdmin** sur [http://localhost:8080](http://localhost:8080) pour visualiser et administrer la base
 
-3. **Configurer la connexion** (voir section [Configuration](#configuration))
+3. **Créer le fichier de configuration**
+
+Copier le fichier d'exemple et renseigner les identifiants :
+
+```bash
+cp GSB_Gestion_Stock/appsettings.example.json GSB_Gestion_Stock/appsettings.json
+```
+
+Puis éditer `appsettings.json` (voir section [Configuration](#configuration)).
 
 4. **Lancer l'application**
+
+Ouvrir `GSB_Gestion_Stock.sln` dans Visual Studio et lancer avec `F5`, ou via la ligne de commande :
 
 ```bash
 cd GSB_Gestion_Stock
 dotnet run
 ```
 
-Ou ouvrir la solution `GSB_Gestion_Stock.sln` dans Visual Studio et lancer avec `F5`.
-
 ---
 
 ## Configuration
 
-Le fichier `appsettings.json` contient la chaîne de connexion MySQL. Il doit être placé **à côté de l'exécutable** (dans `DIST/` si tu utilises la version compilée, ou dans `GSB_Gestion_Stock/` pour le développement).
-
-Avec la configuration Docker fournie (`docker-compose.yml`) :
+Le fichier `GSB_Gestion_Stock/appsettings.json` contient la chaîne de connexion MySQL. Par défaut avec Docker :
 
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "server=localhost;database=GSB_Gestion_Stock;uid=root;pwd=root;"
+    "DefaultConnection": "server=127.0.0.1;port=3306;uid=root;pwd=root;database=GSB_Gestion_Stock;charset=utf8mb4;"
   }
 }
 ```
 
-> **Note** : Le fichier `appsettings.json` n'est pas versionné (voir `.gitignore`). Il faut le créer manuellement à partir de l'exemple ci-dessus avant de lancer l'application.
+> **Note** : `appsettings.json` est ignoré par git (`.gitignore`). Utiliser `appsettings.example.json` comme base et ne jamais committer de vrais identifiants.
+
+### Vérifier la base via phpMyAdmin
+
+Une fois les conteneurs démarrés, phpMyAdmin est accessible à [http://localhost:8080](http://localhost:8080).
+
+| Champ | Valeur |
+|-------|--------|
+| Serveur | `mysql` (ou `127.0.0.1` depuis l'hôte) |
+| Utilisateur | `root` |
+| Mot de passe | `root` |
+
+La base `GSB_Gestion_Stock` doit y apparaître avec ses 5 tables.
 
 ---
 

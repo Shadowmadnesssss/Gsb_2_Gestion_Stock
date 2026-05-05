@@ -16,35 +16,36 @@ namespace GSB_Gestion_Stock.DAO
 
         private void LoadConnectionString()
         {
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json");
+
+            if (!File.Exists(configPath))
+            {
+                throw new FileNotFoundException(
+                    $"Fichier de configuration introuvable : {configPath}\n" +
+                    "Copiez appsettings.example.json en appsettings.json et renseignez vos credentials.");
+            }
+
             try
             {
-                string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json");
-                
-                if (File.Exists(configPath))
+                string jsonContent = File.ReadAllText(configPath);
+                var config = JsonSerializer.Deserialize<JsonElement>(jsonContent);
+
+                if (config.TryGetProperty("ConnectionStrings", out var connectionStrings) &&
+                    connectionStrings.TryGetProperty("DefaultConnection", out var defaultConnection))
                 {
-                    string jsonContent = File.ReadAllText(configPath);
-                    var config = JsonSerializer.Deserialize<JsonElement>(jsonContent);
-                    
-                    if (config.TryGetProperty("ConnectionStrings", out var connectionStrings))
-                    {
-                        if (connectionStrings.TryGetProperty("DefaultConnection", out var defaultConnection))
-                        {
-                            myConnectionString = defaultConnection.GetString();
-                        }
-                    }
+                    myConnectionString = defaultConnection.GetString()
+                        ?? throw new InvalidOperationException("La clé ConnectionStrings:DefaultConnection est vide dans appsettings.json.");
                 }
-                
-                // Si le fichier n'existe pas ou si la lecture échoue, utiliser la valeur par défaut
-                if (string.IsNullOrEmpty(myConnectionString))
+                else
                 {
-                    myConnectionString = "server=127.0.0.1;port=3306;uid=root;pwd=root;database=GSB_Gestion_Stock;charset=utf8mb4;";
+                    throw new InvalidOperationException(
+                        "La clé ConnectionStrings:DefaultConnection est absente de appsettings.json.");
                 }
             }
-            catch (Exception ex)
+            catch (JsonException ex)
             {
-                Console.WriteLine($"Erreur lors du chargement de la configuration : {ex.Message}");
-                // Utiliser la valeur par défaut en cas d'erreur
-                myConnectionString = "server=127.0.0.1;port=3306;uid=root;pwd=root;database=GSB_Gestion_Stock;charset=utf8mb4;";
+                throw new InvalidOperationException(
+                    $"appsettings.json est mal formé : {ex.Message}", ex);
             }
         }
 

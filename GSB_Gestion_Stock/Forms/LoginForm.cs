@@ -129,9 +129,9 @@ namespace GSB_Gestion_Stock.Forms
 
             try
             {
-                // Envoyer le mot de passe en clair, Login gérera le hachage si nécessaire
+                string hashedPassword = PasswordHasher.HashPassword(password);
                 UserDAO userDAO = new UserDAO();
-                var user = userDAO.Login(email, password);
+                var user = userDAO.Login(email, hashedPassword);
 
                 if (user != null)
                 {
